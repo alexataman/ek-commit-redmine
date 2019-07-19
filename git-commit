@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+
+try:
+	from pip import main as pipmain
+except:
+    from pip._internal import main as pipmain 
+
+def import_or_install(package):
+    try:
+        __import__(package)
+    except ImportError:
+        pipmain(['install', "-q", package])
+
+import_or_install("python-redmine")
+
+from redminelib import Redmine
+
+username = os.popen('source kv-bash; kvget username').read()
+password = os.popen('source kv-bash; kvget password').read()
+
+def safe_list_get (l, idx, default):
+  try:
+    return l[idx]
+  except IndexError:
+    return default
+
+commit = safe_list_get(sys.argv, 1, None)
+hours  = safe_list_get(sys.argv, 2, None)
+
+if commit is None:
+	print("Commit message is required")
+	sys.exit()
+
+if hours is None:
+	print("Hours is required")
+	sys.exit()
+
+redmine = Redmine('https://redmine.ekreative.com', username = str(username).strip(), password = str(password).strip())
+project = redmine.project.get('Kidslox')
+
+redmine.time_entry.create(
+    issue_id=55730,
+    hours=hours,
+	comments=commit
+)
