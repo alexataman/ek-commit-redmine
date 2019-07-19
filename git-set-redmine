@@ -23,4 +23,4 @@ source /usr/local/bin/kv-bash
 kvset "username" $1
 kvset "password" $2
 
-echo "Credentials was successfuly saved"
+echo "Credentials were successfuly saved"
