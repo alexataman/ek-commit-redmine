@@ -4,7 +4,7 @@ import os
 import sys
 
 try:
-	from pip import main as pipmain
+    from pip import main as pipmain
 except:
     from pip._internal import main as pipmain 
 
@@ -31,18 +31,32 @@ commit = safe_list_get(sys.argv, 1, None)
 hours  = safe_list_get(sys.argv, 2, None)
 
 if commit is None:
-	print("Commit message is required")
-	sys.exit()
+    print("Commit message is required")
+    sys.exit()
 
 if hours is None:
-	print("Hours is required")
-	sys.exit()
+    print("Hours is required")
+    sys.exit()
 
 redmine = Redmine('https://redmine.ekreative.com', username = str(username).strip(), password = str(password).strip())
 project = redmine.project.get('Kidslox')
 
+
+from subprocess import Popen, PIPE
+from os import path
+
+git_command = ['git', 'commit', '-m', commit]
+git_query = Popen(git_command, stdout=PIPE, stderr=PIPE)
+
+(git_status, error) =  git_query.communicate()
+
+if git_query.poll() == 0:
+    print("Commit was successfully added")
+
 redmine.time_entry.create(
     issue_id=55730,
     hours=hours,
-	comments=commit
+    comments=commit
 )
+
+print("Time tracking was successfully added")
