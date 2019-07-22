@@ -7,20 +7,8 @@ password=$2
 
 [ -z "$username" ] && [ -z "$password" ] echo Username and password are required! && exit 1
 
-clone () {
-	git clone https://github.com/damphat/kv-bash.git
-	path="$PWD"
-	cd kv-bash
-	cp -f kv-bash /usr/local/bin
-	rm -rf $path/kv-bash
-	chmod +x /usr/local/bin/kv-bash
-}
-
-test -f /usr/local/bin/kv-bash || clone
-
-source /usr/local/bin/kv-bash
-
-kvset "username" $1
-kvset "password" $2
+security delete-generic-password -s git-set-redmine
+security add-generic-password -a $username -s git-set-redmine -w $password
+security find-generic-password -s git-set-redmine -w
 
 echo "Credentials were successfuly saved"
