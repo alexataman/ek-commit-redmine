@@ -5,15 +5,15 @@
 username=$1
 password=$2
 
-((!username && !password)) && echo Username and password are required! && exit 1
+[ -z "$username" ] && [ -z "$password" ] echo Username and password are required! && exit 1
 
 clone () {
 	git clone https://github.com/damphat/kv-bash.git
 	path="$PWD"
-	cd kv-bash 
+	cd kv-bash
 	cp -f kv-bash /usr/local/bin
-	rm -rf $path/kv-bash 
-	chmod +x /usr/local/bin/kv-bash 
+	rm -rf $path/kv-bash
+	chmod +x /usr/local/bin/kv-bash
 }
 
 test -f /usr/local/bin/kv-bash || clone
