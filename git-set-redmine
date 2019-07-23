@@ -1,14 +1,30 @@
-#!/bin/bash
+#!/usr/bin/env python3
 
-# END
+import os
+import sys
 
-username=$1
-password=$2
+try:
+    from pip import main as pipmain
+except:
+    from pip._internal import main as pipmain
 
-[ -z "$username" ] && [ -z "$password" ] echo Username and password are required! && exit 1
+def import_or_install(package):
+    try:
+        __import__(package)
+    except ImportError:
+        pipmain(['install', "-q", package])
 
-security delete-generic-password -s git-set-redmine
-security add-generic-password -a $username -s git-set-redmine -w $password
-security find-generic-password -s git-set-redmine -w
+import_or_install("keyring")
+import keyring
 
-echo "Credentials were successfuly saved"
+if len(sys.argv) < 3 or not sys.argv[1] or not sys.argv[2]:
+     print("Username and password are required")
+     sys.exit()
+
+username=sys.argv[1]
+password=sys.argv[2]
+
+keyring.set_password("git-tracking-username", "git-tracking-username", username)
+keyring.set_password("git-tracking-password", "git-tracking-password", username)
+
+print("Credentials were successfuly saved")
