@@ -25,6 +25,6 @@ username=sys.argv[1]
 password=sys.argv[2]
 
 keyring.set_password("git-tracking-username", "git-tracking-username", username)
-keyring.set_password("git-tracking-password", "git-tracking-password", username)
+keyring.set_password("git-tracking-password", "git-tracking-password", password)
 
 print("Credentials were successfuly saved")
