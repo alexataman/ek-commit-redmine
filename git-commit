@@ -6,7 +6,7 @@ import sys
 try:
     from pip import main as pipmain
 except:
-    from pip._internal import main as pipmain 
+    from pip._internal import main as pipmain
 
 def import_or_install(package):
     try:
@@ -15,11 +15,13 @@ def import_or_install(package):
         pipmain(['install', "-q", package])
 
 import_or_install("python-redmine")
+import_or_install("keyring")
 
 from redminelib import Redmine
+import keyring
 
-username = os.popen('source kv-bash; kvget username').read()
-password = os.popen('source kv-bash; kvget password').read()
+username = keyring.get_password("git-tracking-username", "git-tracking-username")
+password = keyring.get_password("git-tracking-password", "git-tracking-password")
 
 def safe_list_get (l, idx, default):
   try:
